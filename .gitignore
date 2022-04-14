@@ -8,7 +8,13 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
-/build
+!build/
+build/*
+!build/outputs/
+build/outputs/*
+!build/outputs/arr/
+build/outputs/arr/*
+!build/outputs/arr/app-debug.arr
 /captures
 .externalNativeBuild
 .cxx
