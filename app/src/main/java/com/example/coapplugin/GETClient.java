@@ -40,6 +40,12 @@ public class GETClient {
     private static final int DEFAULT_BLOCK_SIZE = 512;
     private String response;
 
+    //SINGLETON PATTERN
+    private static final GETClient pluginInstance=new GETClient();
+    public static GETClient getInstace(){
+        return pluginInstance;
+    }
+
     static {
         CoapConfig.register();
         UdpConfig.register();
