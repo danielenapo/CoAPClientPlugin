@@ -19,3 +19,4 @@ build/outputs/arr/*
 .externalNativeBuild
 .cxx
 local.properties
+!app-debug.arr
