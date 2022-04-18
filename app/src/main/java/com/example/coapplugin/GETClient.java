@@ -1,30 +1,14 @@
 package com.example.coapplugin;
-/*******************************************************************************
- * Copyright (c) 2015 Institute for Pervasive Computing, ETH Zurich and others.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * and Eclipse Distribution License v1.0 which accompany this distribution.
- *
- * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v20.html
- * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- *
- * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Achim Kraus (Bosch Software Innovations GmbH) - add saving payload
- ******************************************************************************/
+
+import android.util.Log;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
-import org.eclipse.californium.core.Utils;
 import org.eclipse.californium.core.config.CoapConfig;
 import org.eclipse.californium.elements.config.Configuration;
 import org.eclipse.californium.elements.config.Configuration.DefinitionsProvider;
@@ -61,17 +45,13 @@ public class GETClient {
         }
     };
 
-    /*
-     * Application entry point.
-     */
+
     public String getResponse(String ip, String resource) {
         Configuration config = Configuration.createWithFile(CONFIG_FILE, CONFIG_HEADER, DEFAULTS);
         Configuration.setStandard(config);
 
         URI uri = null; // URI parameter of the request
 
-
-        // input URI from command line arguments
         try {
             uri = new URI("coap://" + ip + ":5683/" + resource);
         } catch (URISyntaxException e) {
@@ -79,11 +59,13 @@ public class GETClient {
             System.exit(-1);
             response= "invalid URI" + e.getMessage();
         }
-
+        Log.i("[DEB]",uri.toString());
         CoapClient client = new CoapClient(uri);
 
         try {
             CoapResponse coapResponse = client.get();
+            Log.i("[DEB]","got a response");
+
             if (coapResponse != null) {
                 response= coapResponse.getResponseText();
             } else {
@@ -93,9 +75,9 @@ public class GETClient {
             response= "Got an error: " + e;
         }
 
+        Log.i("[DEB]",response);
         client.shutdown();
-        return response;
-
+            return response;
     }
 
 }
