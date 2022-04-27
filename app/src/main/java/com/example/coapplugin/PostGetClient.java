@@ -31,10 +31,10 @@ public class PostGetClient {
         Log.d("[DEB]",uri.toString());
         CoapClient client = new CoapClient(uri);
 
-        if(type=="get"){
+        if(type.equals("get")){
             response=get(client);
         }
-        else if (type=="post"){
+        else if (type.equals("post")){
             post(client);
             response=get(client);
         }
