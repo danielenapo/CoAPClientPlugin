@@ -20,19 +20,26 @@ public class SimpleClient {
         return pluginInstance;
     }
 
-    private String response;
+    //private String response;
 
-    public String getResponse(String ip, String resource) {
+
+
+    public static String getResponse(String ip, String resource) {
+        String response;
+
+        Log.d("[DEB]", "starting function");
         URI uri = null; // URI parameter of the request
         try {
             uri = new URI("coap://" + ip + ":5683/" + resource);
         } catch (URISyntaxException e) {
             Log.d("[DEB] error","Invalid URI: " + e.getMessage());
             response= "invalid URI" + e.getMessage();
-            System.exit(-1);
+            return response;
         }
         Log.d("[DEB]",uri.toString());
         CoapClient client = new CoapClient(uri);
+
+
 
         try {
             Log.d("[DEB]", "Calling server");
@@ -47,6 +54,7 @@ public class SimpleClient {
 
         } catch (ConnectorException | IOException e) {
             response= "Got an error: " + e;
+            return response;
         }
 
         Log.d("[DEB]",response);
