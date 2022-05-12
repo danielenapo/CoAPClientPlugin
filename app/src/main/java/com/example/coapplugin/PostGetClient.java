@@ -15,6 +15,7 @@ import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.OptionSet;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.core.server.resources.DiscoveryResource;
+import org.eclipse.californium.core.server.resources.ResourceAttributes;
 import org.eclipse.californium.elements.exception.ConnectorException;
 
 import java.io.IOException;
@@ -102,19 +103,9 @@ public class PostGetClient implements CoapManager{
                 response = "No response received.";
             }
 
-            HashMap<String, String> uriMap = new HashMap<String, String>();
             if (coapResponse.getOptions().getContentFormat() == MediaTypeRegistry.APPLICATION_LINK_FORMAT) {
-                Set<WebLink> links = LinkFormat.parse(coapResponse.getResponseText());
-                links.forEach(link -> {
-                    link.getAttributes().getAttributeKeySet().forEach(attributeKey -> {
-                        String key = attributeKey;
-                        String value = link.getAttributes().getAttributeValues(attributeKey).get(0);
-                        if(key.equals("if"))
-                            uriMap.put(link.getURI(), value);
-                    });
-                });
+                response=parseDiscover(coapResponse.getResponseText());
             }
-            response= uriMap.toString();
         } catch (ConnectorException | IOException e) {
             response = "Got an error: " + e;
             return response;
@@ -123,6 +114,23 @@ public class PostGetClient implements CoapManager{
         Log.d("[DEB]", response);
         client.shutdown();
         return response;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static String parseDiscover(String responseText){
+        String returnString="";
+        Set<WebLink> links = LinkFormat.parse(responseText);
+        for(WebLink link : links){
+            returnString+= link.getURI()+"=";
+            for(String key : link.getAttributes().getAttributeKeySet()){
+                String value= link.getAttributes().getAttributeValues(key).get(0);
+                if(key.equals("if") || key.equals("type")){
+                    returnString+=value+",";
+                }
+            }
+            returnString+=";";
+        }
+        return returnString.substring(0,returnString.length()-1);
     }
 
     public static CoapClient getClient(String ip, String resource) throws URISyntaxException{
