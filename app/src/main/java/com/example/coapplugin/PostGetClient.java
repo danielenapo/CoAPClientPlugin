@@ -121,14 +121,16 @@ public class PostGetClient implements CoapManager{
         String returnString="";
         Set<WebLink> links = LinkFormat.parse(responseText);
         for(WebLink link : links){
-            returnString+= link.getURI()+"=";
-            for(String key : link.getAttributes().getAttributeKeySet()){
-                String value= link.getAttributes().getAttributeValues(key).get(0);
-                if(key.equals("if") || key.equals("type")){
-                    returnString+=value+",";
+            if(!link.getURI().equals("/.well-known/core")) {
+                returnString += link.getURI() + "=";
+                for (String key : link.getAttributes().getAttributeKeySet()) {
+                    String value = link.getAttributes().getAttributeValues(key).get(0);
+                    if (key.equals("if") || key.equals("title")) {
+                        returnString += value + ",";
+                    }
                 }
+                returnString += ";";
             }
-            returnString+=";";
         }
         return returnString.substring(0,returnString.length()-1);
     }
