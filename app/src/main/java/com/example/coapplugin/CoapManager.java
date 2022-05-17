@@ -5,7 +5,7 @@ public interface CoapManager {
         return null;
     }
 
-    public static String post(String ip, String resource) {
+    public static String post(String ip, String resource, String payload) {
         return null;
     }
 

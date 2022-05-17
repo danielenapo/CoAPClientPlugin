@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class PostGetClient implements CoapManager{
 
-    public static String post(String ip, String resource){
+    public static String post(String ip, String resource, String payload){
         String response= new String();
         CoapClient client;
         try{
@@ -37,8 +37,10 @@ public class PostGetClient implements CoapManager{
             return response;
         }
         Request request = new Request(CoAP.Code.POST);
-        //Set Request as Confirmable
         request.setConfirmable(true);
+        if(payload!=null)
+            request.setPayload(payload);
+
         try {
             CoapResponse coapResp = client.advanced(request);
             response= coapResp.getCode().text;
@@ -116,6 +118,13 @@ public class PostGetClient implements CoapManager{
         return response;
     }
 
+    /*
+     * Parses discovery's WebLink format in a string containing oly the essential attributes required by unity's client
+     * (which are  resource URI, if [interface] and title, according to CORE link format, RFC 6690 https://datatracker.ietf.org/doc/html/rfc6690)
+     *
+     * returnString format:
+     * "/resourceURI=title,value;if,value"
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static String parseDiscover(String responseText){
         String returnString="";
