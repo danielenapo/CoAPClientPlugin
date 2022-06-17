@@ -61,9 +61,13 @@ public class PostGetClient implements CoapManager{
             response= "invalid URI" + e.getMessage();
             return response;
         }
+        Request request = new Request(CoAP.Code.GET);
+        request.setOptions(new OptionSet().setAccept(MediaTypeRegistry.APPLICATION_SENML_JSON));
+        request.setConfirmable(true);
+
         try {
             Log.d("[DEB]", "Calling server");
-            CoapResponse coapResponse = client.get();
+            CoapResponse coapResponse = client.advanced(request);
             Log.d("[DEB]", "got a response");
 
             if (coapResponse != null) {
