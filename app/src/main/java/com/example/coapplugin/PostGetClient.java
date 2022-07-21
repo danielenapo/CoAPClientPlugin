@@ -7,21 +7,18 @@ import androidx.annotation.RequiresApi;
 
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
-import org.eclipse.californium.core.Utils;
 import org.eclipse.californium.core.WebLink;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.LinkFormat;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.OptionSet;
 import org.eclipse.californium.core.coap.Request;
-import org.eclipse.californium.core.server.resources.DiscoveryResource;
-import org.eclipse.californium.core.server.resources.ResourceAttributes;
+
 import org.eclipse.californium.elements.exception.ConnectorException;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Set;
 
 public class PostGetClient implements CoapManager{
@@ -138,7 +135,7 @@ public class PostGetClient implements CoapManager{
                 returnString += link.getURI() + "=";
                 for (String key : link.getAttributes().getAttributeKeySet()) {
                     String value = link.getAttributes().getAttributeValues(key).get(0);
-                    if (key.equals("if") || key.equals("title")) {
+                    if (key.equals("if") || key.equals("title") || key.equals("rt")) {
                         returnString += value + ",";
                     }
                 }
@@ -146,6 +143,7 @@ public class PostGetClient implements CoapManager{
             }
         }
         return returnString.substring(0,returnString.length()-1);
+
     }
 
     public static CoapClient getClient(String ip, String resource) throws URISyntaxException{
